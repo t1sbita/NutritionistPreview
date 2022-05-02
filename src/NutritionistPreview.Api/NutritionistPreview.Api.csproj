@@ -2,12 +2,16 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
-    <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.3.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\NutritionistPreview.Api.Business\NutritionistPreview.Api.Business.csproj" />
+    <ProjectReference Include="..\NutritionistPreview.Api.Infrastructure\NutritionistPreview.Api.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
