@@ -18,8 +18,8 @@ jobs:
       with:
         dotnet-version: 6.0.x
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore $PROJECT_BASE
     - name: Build
-      run: dotnet build --no-restore
+      run: dotnet publish -c Release -o artifacts
     - name: Test
-      run: dotnet test --no-build --verbosity normal
+      run: dotnet test --no-restore $PROJECT_BASE -m:1
