@@ -1,11 +1,24 @@
+using Microsoft.EntityFrameworkCore;
+using NutritionistPreview.Api.Extension;
+using NutritionistPreview.Api.Infrastructure.Data.Context;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+builder.Configuration.GetSecrets();
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+#region Context
+builder.Services.AddDbContext<NutritionistContext>(options =>
+                options.UseSqlServer(builder.Configuration.GetSection("ConnectionString:DefaultConnection").Value));
+#endregion
+
+#region Dependency Inject
+builder.Services.AddSingletons();
+builder.Services.AddScopeds();
+#endregion
 
 var app = builder.Build();
 

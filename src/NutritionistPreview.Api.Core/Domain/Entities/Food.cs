@@ -6,6 +6,6 @@ namespace NutritionistPreview.Api.Core.Domain.Entities
     {
         public string Name { get; set; }
         public string Group { get; set; }
-        public double CaloricAmount { get; set; }
+        public int CaloricAmount { get; set; }
     }
 }
