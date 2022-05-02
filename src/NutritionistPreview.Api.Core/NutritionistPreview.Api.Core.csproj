@@ -13,6 +13,10 @@
     <PackageReference Include="Microsoft.Extensions.Localization" Version="6.0.4" />
     <PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="6.0.4" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+
+	  <EmbeddedResource Update="Resources\Resource.pt-BR.resx">
+		  <Generator></Generator>
+	  </EmbeddedResource>
   </ItemGroup>
 
 </Project>
