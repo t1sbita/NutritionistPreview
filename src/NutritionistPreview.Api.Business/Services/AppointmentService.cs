@@ -77,6 +77,9 @@ namespace NutritionistPreview.Api.Business.Services
             _logger.LogInformation("Method GetById AppointmentService");
             var result = _appointmentRepository.GetById(id);
 
+            if (result == null)
+                throw new BusinessException(ResourceFactory.Create().GetMessage(Resource.FIELD_NOT_FOUND).Replace("{PropertyName}", "Appointment"));
+
             return Task.FromResult(result);
         }
 

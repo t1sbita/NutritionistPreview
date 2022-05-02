@@ -30,13 +30,22 @@ namespace NutritionistPreview.Api.Business.Services
                 .Include(x => x.Appointments)
                 .FirstOrDefault();
 
+            if (result == null)
+                throw new BusinessException(ResourceFactory.Create().GetMessage(Resource.FIELD_NOT_FOUND).Replace("{PropertyName}", "Client"));
+
             return Task.FromResult(result);
         }
 
         public Task<Client> GetByDocumentNumber(long documentNumber)
         {
             _logger.LogInformation("Method GetByDocumentNumber ClientService");
-            var result = _clientRepository.Get(x => x.DocumentNumber == documentNumber, x => x.Address, x => x.Appointments);
+            var result = _clientRepository.GetQueryable(x => x.DocumentNumber == documentNumber)
+                 .Include(x => x.Address)
+                 .Include(x => x.Appointments)
+                 .FirstOrDefault();
+
+            if (result == null)
+                throw new BusinessException(ResourceFactory.Create().GetMessage(Resource.FIELD_NOT_FOUND).Replace("{PropertyName}", "Document Number"));
 
             return Task.FromResult(result);
         }
@@ -80,7 +89,10 @@ namespace NutritionistPreview.Api.Business.Services
 
         private void UpdateData(Client clientNew)
         {
-            var client = _clientRepository.GetById(clientNew.Id, x => x.Address, x => x.Appointments);
+            var client = _clientRepository.GetQueryable(x => x.Id == clientNew.Id)
+                .Include(x => x.Address)
+                .Include(x => x.Appointments)
+                .FirstOrDefault();
             if (client == null)
                 return;
 
@@ -89,7 +101,6 @@ namespace NutritionistPreview.Api.Business.Services
 
             MountClient(clientNew, client);
             MountAddress(clientNew.Address, client.Address);
-
         }
 
         private static void MountClient(Client newClient, Client dbClient)

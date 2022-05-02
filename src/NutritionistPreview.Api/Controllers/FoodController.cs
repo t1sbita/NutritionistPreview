@@ -25,9 +25,9 @@ namespace NutritionistPreview.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Diet>>> GetDiet(int caloricAmount)
+        public async Task<ActionResult<List<Diet>>> GetDiet(int caloricAmount, int page, int itemsByPage)
         {
-            var result = await _foodService.GetOptions(caloricAmount).ConfigureAwait(false);
+            var result = await _foodService.GetOptions(caloricAmount, page, itemsByPage).ConfigureAwait(false);
 
             return Ok(result);
         }
