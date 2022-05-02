@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using NutritionistPreview.Api.Extension;
+using NutritionistPreview.Api.Filters;
 using NutritionistPreview.Api.Infrastructure.Data.Context;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,6 +10,7 @@ builder.Configuration.GetSecrets();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddMvc(options => options.Filters.Add(typeof(ExceptionHandlerFilterAttribute)));
 
 #region Context
 builder.Services.AddDbContext<NutritionistContext>(options =>
