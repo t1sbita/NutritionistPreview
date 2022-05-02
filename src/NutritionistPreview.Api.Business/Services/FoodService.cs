@@ -3,6 +3,7 @@ using NutritionistPreview.Api.Business.Services.Base;
 using NutritionistPreview.Api.Business.Services.Interfaces;
 using NutritionistPreview.Api.Core.Domain.Dto;
 using NutritionistPreview.Api.Core.Domain.Entities;
+using NutritionistPreview.Api.Core.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +19,7 @@ namespace NutritionistPreview.Api.Business.Services
 
         }
 
-        public Task<List<Diet>> GetOptions(double caloricAmount)
+        public Task<PageConsultation<Diet>> GetOptions(int caloricAmount, int page, int itemsByPage)
         {
             List<Diet> options = new();
             var groupA = CreateListOfFruits().Where(x => x.Group == "A").ToArray();
@@ -43,7 +44,9 @@ namespace NutritionistPreview.Api.Business.Services
 
                 }
             }
-            return Task.FromResult(options.Where(x => x.TotalCaloricAmount < caloricAmount).ToList());
+            var paginate = Paginate(options.Where(x => x.TotalCaloricAmount < caloricAmount), page, itemsByPage);
+
+            return Task.FromResult(paginate);
         }
 
         private static List<Food> CreateListOfFruits()
@@ -79,6 +82,37 @@ namespace NutritionistPreview.Api.Business.Services
                 new Food(){ Name = "Aipim", Group = "C", CaloricAmount = 250},
 
             };
+        }
+
+        private static PageConsultation<Diet> Paginate(IEnumerable<Diet> query, int page, int itemsByPage)
+        {
+            PageConsultation<Diet> pageConsultation = new();
+
+            
+            int total = query.Count();
+
+           query = query.OrderBy(x => x.TotalCaloricAmount);
+
+            if (page < 1)
+                page = 1;
+
+            pageConsultation.NumberPage = page;
+            pageConsultation.SizePage = itemsByPage;
+            pageConsultation.TotalRecords = total;
+
+            if (pageConsultation.TotalRecords > 0 && pageConsultation.SizePage > 0)
+            {
+                pageConsultation.TotalPages = pageConsultation.TotalRecords / pageConsultation.SizePage;
+
+                if (pageConsultation.TotalRecords % pageConsultation.SizePage > 0)
+                {
+                    pageConsultation.TotalPages++;
+                }
+            }
+
+            pageConsultation.List = query.Skip(itemsByPage * (page - 1)).Take(itemsByPage).ToList();
+
+            return pageConsultation;
         }
     }
 }
